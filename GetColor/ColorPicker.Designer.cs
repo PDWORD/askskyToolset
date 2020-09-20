@@ -38,6 +38,7 @@
             this.colorList = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listClear = new System.Windows.Forms.Button();
+            this.KeyShow = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.cutScreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pixelColor)).BeginInit();
             this.SuspendLayout();
@@ -102,7 +103,7 @@
             this.colorList.ItemHeight = 29;
             this.colorList.Location = new System.Drawing.Point(478, 12);
             this.colorList.Name = "colorList";
-            this.colorList.Size = new System.Drawing.Size(167, 149);
+            this.colorList.Size = new System.Drawing.Size(167, 120);
             this.colorList.TabIndex = 8;
             this.colorList.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.colorList_DrawItem);
             this.colorList.SelectedIndexChanged += new System.EventHandler(this.SelectListColor);
@@ -127,11 +128,22 @@
             this.listClear.UseVisualStyleBackColor = true;
             this.listClear.Click += new System.EventHandler(this.listClear_Click);
             // 
+            // KeyShow
+            // 
+            this.KeyShow.AutoSize = true;
+            this.KeyShow.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.KeyShow.Location = new System.Drawing.Point(474, 136);
+            this.KeyShow.Name = "KeyShow";
+            this.KeyShow.Size = new System.Drawing.Size(114, 19);
+            this.KeyShow.TabIndex = 11;
+            this.KeyShow.Text = "你甚麼都沒按下";
+            // 
             // ColorPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(657, 228);
+            this.Controls.Add(this.KeyShow);
             this.Controls.Add(this.listClear);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.colorList);
@@ -161,6 +173,7 @@
         private System.Windows.Forms.ListBox colorList;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button listClear;
+        private System.Windows.Forms.Label KeyShow;
     }
 }
 

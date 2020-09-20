@@ -7,8 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Reflection;
+
 
 namespace GetColor
 { 
@@ -35,18 +34,65 @@ namespace GetColor
             // 獲取鼠標附近的影像，並裁切成圓形
             int X = Cursor.Position.X;
             int Y = Cursor.Position.Y;
-            cutScreen.Image = screenManager.getRoundImage(X, Y, cutScreen.BackColor);
+            int picBoxSize = cutScreen.Size.Width;
+            int multiple = 5;
+            int radius = (picBoxSize / multiple) / 2;
+            Bitmap screen = getMouseImage(X, Y, radius, multiple);      
 
             // 獲得鼠標指向得像素點顏色
-            Bitmap screen = screenManager.screen;
             Color cursorColor = screen.GetPixel(screen.Width / 2, screen.Height / 2);
             pixelColor.BackColor = cursorColor;
 
-            // 顯示色碼與座標
+            // 畫上十字線
+            darwLineAndRound(screen, screen.Width, screen.Height);
+
+            // 顯示鼠標附近畫面/色碼/座標
+            cutScreen.Image = screen;
             colorHEX.Text = $"HEX={ColorTranslator.ToHtml(cursorColor)}";
             colorRGB.Text = $"RGB=({cursorColor.R}, {cursorColor.B}, {cursorColor.G})";
-            CursorXY.Text = $"X={Cursor.Position.X}, Y={Cursor.Position.Y}";
+            CursorXY.Text = $"X={X}, Y={Y}";
+            
 
+        }
+        #endregion
+
+        #region 獲取鼠標附近畫面
+        public Bitmap getMouseImage(int X, int Y, int radius, int multiple)
+        {
+            // 使左上角成為中心
+            X -= radius;
+            Y -= radius;
+
+            // 初始化面並繪製新畫面
+            screenManager.Clear(cutScreen.BackColor);
+            BitmapRenderer  bitmapRenderer = screenManager.getScreen(X, Y,  radius*2, radius*2);
+            // 放大
+            bitmapRenderer = screenManager.EnlargeImage(bitmapRenderer, multiple);
+
+            // 裁切成圓形
+            bitmapRenderer = screenManager.CutImagetoRound(bitmapRenderer);
+
+            Bitmap bitmap = bitmapRenderer.bitmap;
+            
+            return bitmap;
+        }
+        #endregion
+
+        #region 繪製交叉線與圓
+        public void darwLineAndRound(Bitmap bitmap, int width, int height)
+        {
+            // 繪製交叉線
+            Pen pen = new Pen(Brushes.Red);
+            Graphics g = Graphics.FromImage(bitmap);
+
+            pen.Width = 2.5f;
+            g.DrawLine(pen, width / 2, 0, width / 2, height);
+            g.DrawLine(pen, 0, height / 2, width, height / 2);
+
+            // 繪製圓框
+            pen.Color = Color.Black;
+            pen.Width = 6f;
+            g.DrawEllipse(pen, 3, 3, width - 6, height - 6);
         }
         #endregion
 
@@ -54,6 +100,7 @@ namespace GetColor
         private void GetKey(object sender, KeyEventArgs e)
         {
             colorList.Items.Add(colorHEX.Text.Split('=')[1]);
+            KeyShow.Text = $"你按下了{e.KeyCode}鍵";
         }
         #endregion
 

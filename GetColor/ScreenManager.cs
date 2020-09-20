@@ -1,98 +1,97 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
+
 
 namespace GetColor
 {
     class ScreenManager
     {
-        // 原圖/放大/裁切圓形 存放影像
-        private Bitmap _screen;
-        private Bitmap enlargeScreen;
-        private Bitmap roundScreen;
-
-        // 原圖/放大/裁切圓形 起始點與長寬
-        private Rectangle screenRect;
-        private Rectangle enlargeScreenRect;
-        private Rectangle roundScreenRect;
-
-        // 原圖/放大/裁切圓形 繪製器
-        private Graphics screenPainter;
-        private Graphics enlargeScreenPainter;
-        private Graphics roundScreenPainter;
-
-        private Pen pen;
-        private const int radius = 10;
-
-        public Bitmap screen { get => _screen; }
-
+        private BitmapRenderer screen;
+        private BitmapRenderer enlargeScreen;
+        private BitmapRenderer roundScreen;
 
         #region 初始化與釋放
-        public ScreenManager(int width = radius * 2, int height = radius * 2, int multiple = 10)
+        public ScreenManager()
         {
-            screenRect = new Rectangle(0, 0, width, height);
-            enlargeScreenRect = new Rectangle(0, 0, width * multiple, height * multiple);
-            roundScreenRect = new Rectangle(0, 0, width * multiple, height * multiple);
-
-            _screen = new Bitmap(screenRect.Width, screenRect.Height);
-            enlargeScreen = new Bitmap(enlargeScreenRect.Width, enlargeScreenRect.Height);
-            roundScreen = new Bitmap(roundScreenRect.Width, roundScreenRect.Height);
-
-            screenPainter = Graphics.FromImage(_screen);
-            enlargeScreenPainter = Graphics.FromImage(enlargeScreen);
-            roundScreenPainter = Graphics.FromImage(roundScreen);
-
-            pen = new Pen(Brushes.Red);
-            pen.Width = 2.5f;
-        } 
-        
+            screen = new BitmapRenderer();
+            enlargeScreen = new BitmapRenderer();
+            roundScreen = new BitmapRenderer();
+        }
 
         ~ScreenManager()
         {
-            screenPainter.Dispose();
-            enlargeScreenPainter.Dispose();
-            roundScreenPainter.Dispose();
+            screen = null;
+            enlargeScreen = null;
+            roundScreen = null;
         }
         #endregion
 
-        #region 繪製交叉線
-        public void darwLine(ref Bitmap Bitmap, int width, int height)
+        #region 獲得指定範圍畫面
+        public BitmapRenderer getScreen()
         {
-            Graphics g = Graphics.FromImage(Bitmap);
+            // 獲得螢幕長寬
+            int Width = Screen.PrimaryScreen.Bounds.Width;
+            int Height = Screen.PrimaryScreen.Bounds.Height;
 
-            // 繪製交叉線
-            pen.Color = Color.Red;
-            pen.Width = 2.5f;
-            g.DrawLine(pen, width / 2, 0, width / 2, height);
-            g.DrawLine(pen, 0, height / 2, width, height / 2);
+            return getScreen(0, 0, Width, Height);
+        }
 
-            // 繪製圓框
-            pen.Color = Color.Black;
-            pen.Width = 6f;
-            g.DrawEllipse(pen, 3, 3, width - 6, height - 6);
+        public BitmapRenderer getScreen(int X, int Y, int Width, int Height)
+        {
+            if (Width != screen.Width ||
+                Height != screen.Height)
+                screen = new BitmapRenderer(Width, Height);
+
+            // 獲得螢幕部分畫面
+            screen.graphics.CopyFromScreen(X, Y, 0, 0, screen.bitmap.Size);
+
+            return screen;
         }
         #endregion
 
-        #region 獲取鼠標附近畫面
-        public Bitmap getRoundImage(int X, int Y, Color BackColor)
+        #region 裁切成圓形
+        public BitmapRenderer CutImagetoRound(BitmapRenderer image)
         {
-            X -= radius;
-            Y -= radius;
+            if (image == null) return null;
 
-            // 初始化面並繪製新畫面
-            screenPainter.Clear(BackColor);
-            screenPainter.CopyFromScreen(X, Y, 0, 0, _screen.Size);
-            // 放大
-            enlargeScreenPainter.DrawImage(_screen, enlargeScreenRect, screenRect, GraphicsUnit.Pixel);
+            if (image.Width != roundScreen.Width ||
+                image.Height != roundScreen.Height)
+                roundScreen = new BitmapRenderer(image.Width, image.Height);
 
             // 將畫面作為筆刷繪製圓形
-            using (TextureBrush texture = new TextureBrush(enlargeScreen))
+            using (TextureBrush texture = new TextureBrush(image.bitmap))
             {
-                roundScreenPainter.FillEllipse(texture, roundScreenRect);
+                roundScreen.graphics.FillEllipse(texture, roundScreen.rect);
             }
 
-            darwLine(ref roundScreen, roundScreenRect.Width, roundScreenRect.Height);
-
             return roundScreen;
-        } 
+        }
         #endregion
+
+        #region 放大影像
+        public BitmapRenderer EnlargeImage(BitmapRenderer image, int multiple)
+        {
+            if (image == null || multiple < 1) return null;
+
+            if (enlargeScreen.Width / image.Width != multiple ||
+                enlargeScreen.Height / image.Height != multiple)
+            {
+                int Width = image.Width * multiple;
+                int Height = image.Height * multiple;
+                enlargeScreen = new BitmapRenderer(Width, Height);
+            }
+
+            // 放大
+            enlargeScreen.graphics.DrawImage(image.bitmap, enlargeScreen.rect, image.rect, GraphicsUnit.Pixel);
+
+            return enlargeScreen;
+        }
+        #endregion
+
+        #region 清除繪畫
+        public void Clear(Color color) => screen.graphics.Clear(color);
+        #endregion
+
     }
+
 }
