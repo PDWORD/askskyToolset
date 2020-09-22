@@ -17,6 +17,7 @@ namespace GetColor
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ColorPicker());
+            //Application.Run(new CursorPoint());
         }
     }
 }

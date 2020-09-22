@@ -10,21 +10,28 @@ using System.Windows.Forms;
 
 
 namespace GetColor
-{ 
+{
+    // 聲明通訊委託
+    public delegate void delegateSendMsg();
+
     public partial class ColorPicker : Form
     {
         private ScreenManager screenManager;
         private SolidBrush solid;
+        private List<Color> colors;
 
         #region 初始化
         public ColorPicker()
         {
             InitializeComponent();
+
             screenManager = new ScreenManager();
             solid = new SolidBrush(Color.White);
+            colors = new List<Color>();
 
             // 設置listBox為手動繪製
             colorList.DrawMode = DrawMode.OwnerDrawFixed;
+            comboBox1.SelectedIndex = 0;
         }
         #endregion
 
@@ -37,7 +44,7 @@ namespace GetColor
             int picBoxSize = cutScreen.Size.Width;
             int multiple = 5;
             int radius = (picBoxSize / multiple) / 2;
-            Bitmap screen = getMouseImage(X, Y, radius, multiple);      
+            Bitmap screen = getMouseImage(X, Y, radius, multiple);
 
             // 獲得鼠標指向得像素點顏色
             Color cursorColor = screen.GetPixel(screen.Width / 2, screen.Height / 2);
@@ -46,13 +53,32 @@ namespace GetColor
             // 畫上十字線
             darwLineAndRound(screen, screen.Width, screen.Height);
 
+            //對應選單色彩類型進行轉換
+            ColorSpaceType colorSpace = null;
+            switch (comboBox1.SelectedIndex)
+            {
+                case (int)ColorSpace.Type.RGB:
+                    colorSpace = new RGB();
+                    break;
+                case (int)ColorSpace.Type.CMYK:
+                    colorSpace = new CMYK();
+                    break;
+                case (int)ColorSpace.Type.HSV:
+                    colorSpace = new HSV();
+                    break;
+                case (int)ColorSpace.Type.HSL:
+                    colorSpace = new HSL();
+                    break;
+                case (int)ColorSpace.Type.HEX:
+                    colorSpace = new HEX();
+                    break;
+            }
+            string colorFormat = colorSpace.getColorFormat(cursorColor);
+
             // 顯示鼠標附近畫面/色碼/座標
             cutScreen.Image = screen;
-            colorHEX.Text = $"HEX={ColorTranslator.ToHtml(cursorColor)}";
-            colorRGB.Text = $"RGB=({cursorColor.R}, {cursorColor.B}, {cursorColor.G})";
+            colorCode.Text = colorFormat;
             CursorXY.Text = $"X={X}, Y={Y}";
-            
-
         }
         #endregion
 
@@ -97,10 +123,18 @@ namespace GetColor
         #endregion
 
         #region 紀錄顏色
-        private void GetKey(object sender, KeyEventArgs e)
+        private void GetKey(object sender, KeyEventArgs e) => saveColor(e.KeyCode.ToString());
+
+        private void saveColor(string key)
         {
-            colorList.Items.Add(colorHEX.Text.Split('=')[1]);
-            KeyShow.Text = $"你按下了{e.KeyCode}鍵";
+            KeyShow.Text = $"你按下了{key}鍵";
+            saveColor();
+        }
+
+        private void saveColor()
+        {
+            colorList.Items.Insert(0, colorCode.Text.Split('=')[1]);
+            colors.Insert(0, pixelColor.BackColor);
         }
         #endregion
 
@@ -111,7 +145,7 @@ namespace GetColor
             if (list == null || e.Index < 0) return;
 
             // 繪製選項底色
-            solid.Color = ColorTranslator.FromHtml(list.Items[e.Index].ToString());
+            solid.Color = colors[e.Index];
             e.Graphics.FillRectangle(solid, e.Bounds);
 
             // 繪製選項文字顏色
@@ -142,7 +176,10 @@ namespace GetColor
         private void listClear_Click(object sender, EventArgs e)
         {
             colorList.Items.Clear();
-        } 
+            colors.Clear();
+            // 切換焦點
+            label1.Focus();
+        }
         #endregion
     }
 }

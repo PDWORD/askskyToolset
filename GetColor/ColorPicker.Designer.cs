@@ -33,12 +33,12 @@
             this.cutScreen = new System.Windows.Forms.PictureBox();
             this.pixelColor = new System.Windows.Forms.PictureBox();
             this.CursorXY = new System.Windows.Forms.Label();
-            this.colorHEX = new System.Windows.Forms.Label();
-            this.colorRGB = new System.Windows.Forms.Label();
+            this.colorCode = new System.Windows.Forms.Label();
             this.colorList = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.listClear = new System.Windows.Forms.Button();
             this.KeyShow = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.cutScreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pixelColor)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +60,7 @@
             // 
             this.pixelColor.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.pixelColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pixelColor.Location = new System.Drawing.Point(224, 12);
+            this.pixelColor.Location = new System.Drawing.Point(236, 12);
             this.pixelColor.Name = "pixelColor";
             this.pixelColor.Size = new System.Drawing.Size(50, 50);
             this.pixelColor.TabIndex = 3;
@@ -70,31 +70,21 @@
             // 
             this.CursorXY.AutoSize = true;
             this.CursorXY.Font = new System.Drawing.Font("微軟正黑體", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.CursorXY.Location = new System.Drawing.Point(219, 69);
+            this.CursorXY.Location = new System.Drawing.Point(231, 82);
             this.CursorXY.Name = "CursorXY";
             this.CursorXY.Size = new System.Drawing.Size(118, 30);
             this.CursorXY.TabIndex = 4;
             this.CursorXY.Text = "X=0, Y=0";
             // 
-            // colorHEX
+            // colorCode
             // 
-            this.colorHEX.AutoSize = true;
-            this.colorHEX.Font = new System.Drawing.Font("微軟正黑體", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.colorHEX.Location = new System.Drawing.Point(219, 125);
-            this.colorHEX.Name = "colorHEX";
-            this.colorHEX.Size = new System.Drawing.Size(92, 30);
-            this.colorHEX.TabIndex = 5;
-            this.colorHEX.Text = "HEX=#";
-            // 
-            // colorRGB
-            // 
-            this.colorRGB.AutoSize = true;
-            this.colorRGB.Font = new System.Drawing.Font("微軟正黑體", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.colorRGB.Location = new System.Drawing.Point(219, 181);
-            this.colorRGB.Name = "colorRGB";
-            this.colorRGB.Size = new System.Drawing.Size(95, 30);
-            this.colorRGB.TabIndex = 7;
-            this.colorRGB.Text = "RGB=()";
+            this.colorCode.AutoSize = true;
+            this.colorCode.Font = new System.Drawing.Font("微軟正黑體", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.colorCode.Location = new System.Drawing.Point(231, 125);
+            this.colorCode.Name = "colorCode";
+            this.colorCode.Size = new System.Drawing.Size(92, 30);
+            this.colorCode.TabIndex = 5;
+            this.colorCode.Text = "HEX=#";
             // 
             // colorList
             // 
@@ -119,11 +109,13 @@
             // 
             // listClear
             // 
+            this.listClear.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.listClear.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.listClear.Location = new System.Drawing.Point(478, 182);
             this.listClear.Name = "listClear";
             this.listClear.Size = new System.Drawing.Size(167, 35);
             this.listClear.TabIndex = 10;
+            this.listClear.TabStop = false;
             this.listClear.Text = "清空列表";
             this.listClear.UseVisualStyleBackColor = true;
             this.listClear.Click += new System.EventHandler(this.listClear_Click);
@@ -138,17 +130,33 @@
             this.KeyShow.TabIndex = 11;
             this.KeyShow.Text = "你甚麼都沒按下";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.Font = new System.Drawing.Font("微軟正黑體", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "RGB",
+            "CMYK",
+            "HSV",
+            "HSL",
+            "HEX"});
+            this.comboBox1.Location = new System.Drawing.Point(307, 12);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(150, 33);
+            this.comboBox1.TabIndex = 12;
+            // 
             // ColorPicker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(657, 228);
+            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.KeyShow);
             this.Controls.Add(this.listClear);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.colorList);
-            this.Controls.Add(this.colorRGB);
-            this.Controls.Add(this.colorHEX);
+            this.Controls.Add(this.colorCode);
             this.Controls.Add(this.CursorXY);
             this.Controls.Add(this.pixelColor);
             this.Controls.Add(this.cutScreen);
@@ -168,12 +176,12 @@
         private System.Windows.Forms.PictureBox cutScreen;
         private System.Windows.Forms.PictureBox pixelColor;
         private System.Windows.Forms.Label CursorXY;
-        private System.Windows.Forms.Label colorHEX;
-        private System.Windows.Forms.Label colorRGB;
+        private System.Windows.Forms.Label colorCode;
         private System.Windows.Forms.ListBox colorList;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button listClear;
         private System.Windows.Forms.Label KeyShow;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 
