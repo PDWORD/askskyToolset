@@ -20,6 +20,12 @@ namespace GetColor
         private SolidBrush solid;
         private List<Color> colors;
 
+        RGB RGBcolorSpace;
+        CMYK CMYKcolorSpace;
+        HSV HSVcolorSpace;
+        HSL HSLcolorSpace;
+        HEX HEXcolorSpace;
+
         #region 初始化
         public ColorPicker()
         {
@@ -32,6 +38,12 @@ namespace GetColor
             // 設置listBox為手動繪製
             colorList.DrawMode = DrawMode.OwnerDrawFixed;
             comboBox1.SelectedIndex = 0;
+
+            RGBcolorSpace = new RGB();
+            CMYKcolorSpace = new CMYK();
+            HSVcolorSpace = new HSV();
+            HSLcolorSpace = new HSL();
+            HEXcolorSpace = new HEX();
         }
         #endregion
 
@@ -58,19 +70,19 @@ namespace GetColor
             switch (comboBox1.SelectedIndex)
             {
                 case (int)ColorSpace.Type.RGB:
-                    colorSpace = new RGB();
+                    colorSpace = RGBcolorSpace;
                     break;
                 case (int)ColorSpace.Type.CMYK:
-                    colorSpace = new CMYK();
+                    colorSpace = CMYKcolorSpace;
                     break;
                 case (int)ColorSpace.Type.HSV:
-                    colorSpace = new HSV();
+                    colorSpace = HSVcolorSpace;
                     break;
                 case (int)ColorSpace.Type.HSL:
-                    colorSpace = new HSL();
+                    colorSpace = HSLcolorSpace;
                     break;
                 case (int)ColorSpace.Type.HEX:
-                    colorSpace = new HEX();
+                    colorSpace = HEXcolorSpace;
                     break;
             }
             string colorFormat = colorSpace.getColorFormat(cursorColor);
