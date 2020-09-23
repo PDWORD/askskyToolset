@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextToImage", "askskyToolse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetColor", "GetColor\GetColor.csproj", "{03D130E9-079F-41B9-A39B-DD3927866306}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "getProcessFilePath", "getProcessFilePath\getProcessFilePath.csproj", "{E3C7491F-D670-4973-8A0A-C80AB317ABE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{03D130E9-079F-41B9-A39B-DD3927866306}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03D130E9-079F-41B9-A39B-DD3927866306}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03D130E9-079F-41B9-A39B-DD3927866306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3C7491F-D670-4973-8A0A-C80AB317ABE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3C7491F-D670-4973-8A0A-C80AB317ABE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3C7491F-D670-4973-8A0A-C80AB317ABE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3C7491F-D670-4973-8A0A-C80AB317ABE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
